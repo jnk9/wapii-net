@@ -1,15 +1,12 @@
 module Jsonplaceholder
-  class User
-    include HTTParty
-
-    base_uri 'jsonplaceholder.typicode.com'
+  class User < Base
 
     def initialize; end
     
     def all
       response = self.class.get('/users')
       users = JSON.parse(response.body)
-      users_sort = sort_by_desc(users)
+      users_sort = sort_by_desc(users, 'id')
       add_hash_count_posts(users_sort)
     end
 
@@ -57,10 +54,6 @@ module Jsonplaceholder
       recipent.each do |user|
         user['count_posts'] = count_posts(user['id'])
       end
-    end
-
-    def sort_by_desc(recipent)
-      recipent.sort_by { |hash| hash['id'].to_i }.reverse
     end
   end
 end

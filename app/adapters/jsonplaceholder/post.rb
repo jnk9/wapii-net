@@ -1,10 +1,13 @@
 module Jsonplaceholder
-  class Post
-    include HTTParty
-
-    base_uri 'jsonplaceholder.typicode.com'
+  class Post < Base
 
     def initialize; end
+
+    def all(start = 0, limit = 10)
+      response = self.class.get("/posts")
+      posts = JSON.parse(response.body)
+      add_hash_count_comments(posts)
+    end
 
 
     def find(post_id)
@@ -15,9 +18,22 @@ module Jsonplaceholder
       post
     end
 
+    def trending(limit = 5)
+      sort_by_desc(all, 'count_comments')[0..limit].map do |post|
+        {
+          id: post['id'],
+          title: post['title'],
+          body: post['body'],
+          count_comments: post['count_comments']
+        }
+      end
+    end
+
+    private
+
     def add_hash_count_comments(object)
       if object.is_a?(Array)
-        recipent.each do |post|
+        object.each do |post|
           post['count_comments'] = count_comments(post['id'])
         end
       else

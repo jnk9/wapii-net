@@ -19,7 +19,7 @@ module Jsonplaceholder
     end
 
     def trending(limit = 5)
-      sort_by_desc(all, 'count_comments')[0..limit].map do |post|
+      sort_by_desc(all, 'count_comments')[0..(limit.to_i - 1)].map do |post|
         {
           id: post['id'],
           title: post['title'],

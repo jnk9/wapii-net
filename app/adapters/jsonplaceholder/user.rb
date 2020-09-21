@@ -10,7 +10,7 @@ module Jsonplaceholder
       add_hash_count_posts(users_sort)
     end
 
-    def find
+    def find(user_id)
       response = self.class.get("/users/#{user_id}")
       user = JSON.parse(response.body)
     end
